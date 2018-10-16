@@ -12,6 +12,17 @@ services:
   workspace:
     build:
       context: ./workspace
+      args: 
+        - PHP_VERSION=${PHP_VERSION}
+        - PHP_INSTALL_MBSTRING=${PHP_INSTALL_MBSTRING}
+        - PHP_INSTALL_SQLITE=${PHP_INSTALL_SQLITE}
+        - PHP_INSTALL_XML=${PHP_INSTALL_XML}
+        - PHP_INSTALL_ZIP=${PHP_INSTALL_ZIP}
+        - PHP_INSTALL_JSON=${PHP_INSTALL_JSON}
+        - PHP_INSTALL_CURL=${PHP_INSTALL_CURL}
+        - PHP_INSTALL_BCMATH=${PHP_INSTALL_BCMATH}
+        - PHP_INSTALL_MYSQLI=${PHP_INSTALL_MYSQLI}
+        - PHP_INSTALL_IMAP=${PHP_INSTALL_IMAP}
     depends_on:
       - php-fpm
       - nginx
