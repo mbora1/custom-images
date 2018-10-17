@@ -34,49 +34,47 @@ services:
     tty: true
 
   nginx:
-    # image: customimages_nginx
     image: mbora/mautic_nginx
     build:
       context: ./nginx
     depends_on:
       - php-fpm
-    ports:
-      - "80:80"
     volumes:
       - ${NGINX_SITES_PATH}:/etc/nginx/sites-available
       - ${APP_CODE_PATH_HOST}:/var/www
     networks:
       - stack
-    links:
-      - php-fpm
+    expose:
+      - "80"
+      - "443"
+    ports:
+      - "80:80"
 
   php-fpm:
-    # image: customimages_php-fpm
     image: mbora/mautic_php-fpm
     build:
       context: ./php-fpm
       args:
         - PHP_VERSION=${PHP_VERSION}
         - PHP_INSTALL_ZIP=${PHP_INSTALL_ZIP}
-        - PHP_INSTALL_XDEBUG=${PHP_INSTALL_XDEBUG}
         - PHP_INSTALL_BCMATH=${PHP_INSTALL_BCMATH}
         - PHP_INSTALL_MYSQLI=${PHP_INSTALL_MYSQLI}
         - PHP_INSTALL_IMAP=${PHP_INSTALL_IMAP}
-    networks:
-      - stack
+    hostname: ${PHP_FPM_HOST}
     volumes:
       - ${APP_CODE_PATH_HOST}:/var/www
-    extra_hosts:
-      - "idehost:${DEBUGGER_HOST_IP}"
+    networks:
+      - stack
+    expose:
+      - "9000"
+
 
   mariadb:
     image: mbora/mautic_mariadb
     build: ./mariadb
-    hostname: mariadb
+    hostname: ${MARIADB_HOST}
     volumes:
       - ${DATA_PATH_HOST}/mariadb:/var/lib/mysql
-    ports:
-      - "${MARIADB_PORT}:3306"
     environment:
       - MYSQL_DATABASE=${MARIADB_DATABASE}
       - MYSQL_USER=${MARIADB_USER}
@@ -84,3 +82,8 @@ services:
       - MYSQL_ROOT_PASSWORD=${MARIADB_ROOT_PASSWORD}
     networks:
       - stack
+    expose:
+      - "3306"
+    ports:
+      - "${MARIADB_PORT}:3306"
+

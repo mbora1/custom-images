@@ -70,3 +70,6 @@ ARG PHP_INSTALL_IMAP
 RUN if [ ${PHP_INSTALL_IMAP} = true ]; then \
     apt install -y --assume-yes php${PHP_VERSION}-imap \
 ;fi
+
+USER www-data
+

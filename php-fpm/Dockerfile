@@ -19,14 +19,19 @@ RUN apt-get update \
     libkrb5-dev \
     libc-client-dev \
     iputils-ping \
+    zlib1g-dev \
+    libicu-dev \
+    g++ \
     && rm -rf /var/lib/apt/lists/* \
     && docker-php-ext-install mcrypt \
     && docker-php-ext-install pdo_mysql \
+    && docker-php-ext-configure intl \
+    && docker-php-ext-install intl \
     && docker-php-ext-configure gd \
         --enable-gd-native-ttf \
         --with-jpeg-dir=/usr/lib \
-        --with-freetype-dir=/usr/include/freetype2 && \
-        docker-php-ext-install gd   
+        --with-freetype-dir=/usr/include/freetype2 \
+    && docker-php-ext-install gd
 
 
 ## ZIP ##
@@ -41,8 +46,7 @@ RUN if [ ${PHP_INSTALL_BCMATH} = true ]; then \
     docker-php-ext-install bcmath \
 ;fi
 
-ARG PHP_INSTALL_MYSQLI=false
-
+ARG PHP_INSTALL_MYSQLI
 RUN if [ ${PHP_INSTALL_MYSQLI} = true ]; then \
     docker-php-ext-install mysqli \
 ;fi
@@ -54,17 +58,9 @@ RUN if [ ${PHP_INSTALL_IMAP} = true ]; then \
     docker-php-ext-install imap \
 ;fi
 
-## XDEBUG ##
-ARG PHP_INSTALL_XDEBUG
 
-RUN if [ ${PHP_INSTALL_XDEBUG} = true ]; then \
-  pecl install xdebug \ 
-  && docker-php-ext-enable xdebug \
-;fi
-
-# Copy xdebug configuration for remote debugging
-COPY ./xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
+RUN cp /usr/local/etc/php/php.ini-production /usr/local/etc/php/php.ini && \
+    sed -i "s/\;date.timezone =/date.timezone='Europe\/Madrid'/" /usr/local/etc/php/php.ini
 
 WORKDIR /var/www
 
-EXPOSE 9000
