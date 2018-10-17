@@ -8,7 +8,7 @@ WORKDIR /var/www
 
 RUN apt-get update && apt-get -y dist-upgrade && apt install -y apt-utils cron software-properties-common  && \
     echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections && \
-    usermod --uid 1000 www-data && \
+    usermod --uid 1000 --shell /bin/bash www-data  && \
     add-apt-repository -y ppa:ondrej/php && apt-get update && \
     apt install -y --assume-yes wget nano php${PHP_VERSION}-cli  openssl ca-certificates  curl git unzip && \
     install-composer.sh

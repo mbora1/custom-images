@@ -54,6 +54,12 @@ services:
     image: mbora/mautic_php-fpm
     build:
       context: ./php-fpm
+      args:
+        - PHP_VERSION=${PHP_VERSION}
+        - PHP_INSTALL_ZIP=${PHP_INSTALL_ZIP}
+        - PHP_INSTALL_BCMATH=${PHP_INSTALL_BCMATH}
+        - PHP_INSTALL_MYSQLI=${PHP_INSTALL_MYSQLI}
+        - PHP_INSTALL_IMAP=${PHP_INSTALL_IMAP}
     networks:
       - stack
     volumes:
