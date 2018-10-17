@@ -6,7 +6,7 @@ ADD install-composer.sh /usr/bin/install-composer.sh
 
 WORKDIR /var/www
 
-RUN apt-get update && apt-get -y dist-upgrade && apt install -y apt-utils cron software-properties-common  && \
+RUN apt-get update && apt install -y apt-utils cron software-properties-common  && \
     echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections && \
     usermod --uid 1000 --shell /bin/bash www-data  && \
     add-apt-repository -y ppa:ondrej/php && apt-get update && \

@@ -54,6 +54,17 @@ RUN if [ ${PHP_INSTALL_IMAP} = true ]; then \
     docker-php-ext-install imap \
 ;fi
 
+## XDEBUG ##
+ARG PHP_INSTALL_XDEBUG
+
+RUN if [ ${PHP_INSTALL_XDEBUG} = true ]; then \
+  pecl install xdebug \ 
+  && docker-php-ext-enable xdebug \
+;fi
+
+# Copy xdebug configuration for remote debugging
+COPY ./xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
+
 WORKDIR /var/www
 
 EXPOSE 9000

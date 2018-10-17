@@ -10,6 +10,7 @@ networks:
 
 services:
   workspace:
+    image: mbora/mautic_workspace 
     build:
       context: ./workspace
       args: 
@@ -57,6 +58,7 @@ services:
       args:
         - PHP_VERSION=${PHP_VERSION}
         - PHP_INSTALL_ZIP=${PHP_INSTALL_ZIP}
+        - PHP_INSTALL_XDEBUG=${PHP_INSTALL_XDEBUG}
         - PHP_INSTALL_BCMATH=${PHP_INSTALL_BCMATH}
         - PHP_INSTALL_MYSQLI=${PHP_INSTALL_MYSQLI}
         - PHP_INSTALL_IMAP=${PHP_INSTALL_IMAP}
@@ -64,9 +66,13 @@ services:
       - stack
     volumes:
       - ${APP_CODE_PATH_HOST}:/var/www
+    extra_hosts:
+      - "idehost:${DEBUGGER_HOST_IP}"
 
   mariadb:
+    image: mbora/mautic_mariadb
     build: ./mariadb
+    hostname: mariadb
     volumes:
       - ${DATA_PATH_HOST}/mariadb:/var/lib/mysql
     ports:
